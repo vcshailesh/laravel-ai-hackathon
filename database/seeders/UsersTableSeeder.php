@@ -3,18 +3,23 @@
 namespace Database\Seeders;
 
 use Exception;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
 
-class DatabaseSeeder extends Seeder
+class UsersTableSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
     public function run(): void
     {
         try {
-            $this->call(UsersTableSeeder::class);
+            User::create([
+                'name' => 'Laravel AI',
+                'email' => 'laravel@ai.com',
+                'password' => bcrypt('Laravel@ai')
+            ]);
         } catch (Exception $ex) {
             Log::error($ex->getMessage());
         }
