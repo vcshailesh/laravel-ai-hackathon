@@ -40,5 +40,6 @@ Route::controller(HomeController::class)
     ->group(function () {
         Route::get('/', 'index')->name('home');
         Route::post('/chatbot', 'generateResponse')->name('chatbot');
+        Route::post('/listen', 'listenResponse')->name('listen');
 });
 

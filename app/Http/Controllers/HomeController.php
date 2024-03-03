@@ -29,7 +29,6 @@ class HomeController extends Controller
     {
         try {
             $userText = $request->userText;
-            $language = $request->language;
             $apiUrl = env('GROQ_API_URL');
             $apiKey = env('GROQ_API_KEY');
 
@@ -105,5 +104,45 @@ class HomeController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    /**
+     * For listen response
+     */
+    public function listenResponse(Request $request): JsonResponse
+    {
+        $responseText = $request->responseText;
+        $limitedText = Str::limit($responseText, 350);
+
+        $apiUrl = env('ELEVAN_API_URL');
+        $apiKey = env('ELEVAN_API_KEY');
+
+        $client = new Client();
+        $response = $client->post($apiUrl, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                "x-api-key" => $apiKey
+            ],
+            'json' => [
+                'model' => 'eleven_multilingual_v2',
+                'text' => $limitedText,
+                'voice_settings' => [
+                    'similarity_boost' => 0,
+                    'stability' => 0,
+                    'style' => 0,
+                ]
+            ],
+        ]);
+
+
+        if ($response->getStatusCode() == 200) {
+            $audioPath = 'output.mp3';
+
+            Storage::put($audioPath, $response->getBody(), 'public');
+
+            $audioUrl = Storage::url($audioPath);
+        }
+
+        return response()->json($audioUrl);
     }
 }
