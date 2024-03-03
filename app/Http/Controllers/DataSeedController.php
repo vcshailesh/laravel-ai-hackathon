@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dataset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -31,7 +32,12 @@ class DataSeedController extends Controller
         $filePath = '/uploads/company_information/';
         $uploadDetails = $this->uploadFile($file, $filePath, $fileModifyName);
 
-        $textPDF = $this->pdfToTextConvert($uploadDetails['uploaded_path'].$uploadDetails['file_name']);
+        $textPDF = $this->pdfToTextConvert($uploadDetails['uploaded_path'] . $uploadDetails['file_name']);
+
+        Dataset::create([
+            'category_id' => 1,
+            'description' => $textPDF
+        ]);
 
         return redirect()->route('admin.data-seed.index');
     }
@@ -55,11 +61,12 @@ class DataSeedController extends Controller
                 $this->deleteFile($destinationPath, $oldFileName);
             }
 
+            $uploadedFilePath = 'storage' . $destinationPath;
             Storage::disk('public')->put($destinationPath . '/' . $fileName, file_get_contents($file));
 
             $response = [
                 'file_name' => $fileName,
-                'uploaded_path' => $destinationPath,
+                'uploaded_path' => $uploadedFilePath,
             ];
         } catch (\Exception $ex) {
             Log::error($ex);
