@@ -39,7 +39,7 @@ class DataSeedController extends Controller
             'description' => $textPDF
         ]);
 
-        return redirect()->route('admin.data-seed.index');
+        return redirect()->route('admin.data-seed.index')->with('success', 'Document upload successfully');;
     }
 
     /**
