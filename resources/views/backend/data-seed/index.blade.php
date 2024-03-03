@@ -2,7 +2,7 @@
 
 @section('content')
 <form action="{{ route('admin.data-seed.upload') }}" class="relative w-4/5 h-32 max-w-xs mb-10 bg-white bg-gray-100 rounded-lg shadow-inner d-flex"
-    enctype="multipart/form-data">
+    enctype="multipart/form-data" method="post">
     @csrf
     <input type="file" id="file-upload" class="hidden" name="file"
         @error('file') is-invalid @enderror required value="{{ old('file') }}">
