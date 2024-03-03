@@ -37,10 +37,9 @@ class HomeController extends Controller
             $apiKey = env('GROQ_API_KEY');
 
             $client = new Client();
-            $response = $this->getQueryFormAI($client, $apiKey, $apiUrl);
+            $response = $this->getQueryFormAI($client, $apiUrl, $apiKey, $userText);
 
             $responseData = json_decode($response, true);
-
             $keywords = $responseData['choices'][0]['message']['content'];
 
             $keywordsArray = [];
@@ -61,7 +60,7 @@ class HomeController extends Controller
                         $paragraph .= $data->description;
                     }
 
-                    $dbResponse = $this->getResultFormat($client, $apiKey, $apiUrl);
+                    $dbResponse = $this->getResultFormat($client, $apiKey, $apiUrl, $userText, $paragraph);
                     $dbResponseData = json_decode($dbResponse, true);
 
                     $dbResult = $dbResponseData['choices'][0]['message']['content'];
@@ -126,9 +125,10 @@ class HomeController extends Controller
      * @param Client $client
      * @param string $apiUrl
      * @param string $apiKey
+     * @param string $userText
      * @return mixed
      */
-    private function getQueryFormAI(Client $client, string $apiUrl, string $apiKey): mixed
+    private function getQueryFormAI(Client $client, string $apiUrl, string $apiKey, string $userText): mixed
     {
         $response = $client->post($apiUrl, [
             'headers' => [
@@ -156,10 +156,17 @@ class HomeController extends Controller
      * @param Client $client
      * @param string $apiUrl
      * @param string $apiKey
+     * @param string $userText
+     * @param string $paragraph
      * @return mixed
      */
-    private function getResultFormat(Client $client, string $apiKey, string $apiUrl): mixed
-    {
+    private function getResultFormat(
+        Client $client,
+        string $apiKey,
+        string $apiUrl,
+        string $userText,
+        string $paragraph
+    ): mixed {
         $dbResponse = $client->post($apiUrl, [
             'headers' => [
                 'Content-Type' => 'application/json',
