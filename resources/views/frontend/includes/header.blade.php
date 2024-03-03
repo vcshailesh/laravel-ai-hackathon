@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <a href="">
-                    DBMiners
+                    {{ env('APP_NAME') }}
                 </a>
             </div>
             <button class="md:hidden" onclick="menuToggle()">

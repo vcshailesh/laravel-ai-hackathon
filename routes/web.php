@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\auth\LoginController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +16,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'home');
-Route::controller(LoginController::class)
-    ->as('admin.')
-    ->prefix('admin')
-    ->group(function () {
-        Route::get('login', 'index')->name('login');
+
+Route::controller(LoginController::class)->as('admin.')->prefix('admin')->group(function () {
+    Route::get('login', 'index')->name('login');
+    Route::post('login', 'store')->name('store');
+    Route::get('logout', 'logout')->name('logout');
+
+    Route::group(['middleware' => 'auth'], function () {
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    });
 });

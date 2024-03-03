@@ -3,7 +3,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between border-t border-zinc-700 py-4 md:py-5 xl:py-7">
             <div>
                 <a href="">
-                    DBMiners
+                    {{ env('APP_NAME') }}
                 </a>
                 <span class="text-xs xl:text-sm text-gray-custom">©{{date('Y')}} {{ __('landing_page.footer.copyright') }}</span>
             </div>
