@@ -27,12 +27,14 @@
     @stack('after-styles')
 
     <!-- Scripts -->
-    {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-black bg-main bg-[length:100%] text-white font-raleway">
 
-    @yield('content')
+    <div class="container">
+        @yield('content')
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="{{ asset('js/tailwindConfig.js') }}"></script>
     <script src="{{ asset('js/lottie.min.js') }}"></script>

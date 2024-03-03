@@ -13,11 +13,6 @@
 				<h3 class="text-[24px] lg:text-[28px] font-semibold mb-1">{{ __('login.login') }}</h3>
 				<form method="POST" id="login" action="">
 					@csrf
-					{{-- @error('email')
-						<span class="invalid-feedback" role="alert">
-							<strong>{{ $message }}</strong>
-					</span>
-					@enderror --}}
 					<div class="mt-5">
 						<label>{{ __('login.form.email') }}</label>
 						<div class="mt-1.5">

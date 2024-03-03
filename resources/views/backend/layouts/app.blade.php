@@ -21,6 +21,7 @@
     @stack('before-styles')
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ asset('css/error.css') }}" rel="stylesheet">
 
     @stack('after-styles')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />

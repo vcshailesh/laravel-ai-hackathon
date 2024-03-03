@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\auth\LoginController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,10 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'home');
 Route::controller(LoginController::class)
     ->as('admin.')
     ->prefix('admin')
     ->group(function () {
         Route::get('login', 'index')->name('login');
+});
+
+Route::controller(HomeController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('home');
 });
