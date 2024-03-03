@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Spatie\PdfToText\Pdf;
 
 class DataSeedController extends Controller
 {
@@ -17,6 +19,10 @@ class DataSeedController extends Controller
         return view('backend.data-seed.index');
     }
 
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
     public function storeUploadFile(Request $request)
     {
         $file = $request->file('file');
@@ -25,7 +31,9 @@ class DataSeedController extends Controller
         $filePath = '/uploads/company_information/';
         $uploadDetails = $this->uploadFile($file, $filePath, $fileModifyName);
 
-        return $uploadDetails;
+        $textPDF = $this->pdfToTextConvert($uploadDetails['uploaded_path'].$uploadDetails['file_name']);
+
+        return redirect()->route('admin.data-seed.index');
     }
 
     /**
@@ -72,5 +80,12 @@ class DataSeedController extends Controller
         }
 
         return true;
+    }
+
+    private function pdfToTextConvert($file)
+    {
+        return (new Pdf())
+            ->setPdf($file)
+            ->text();
     }
 }
