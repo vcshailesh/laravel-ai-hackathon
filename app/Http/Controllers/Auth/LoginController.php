@@ -7,6 +7,7 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -21,9 +22,12 @@ class LoginController extends Controller
     }
 
     /**
-     * @return mixed
+     * Authentication
+     *
+     * @param LoginRequest $request
+     * @return RedirectResponse
      */
-    public function store(LoginRequest $request)
+    public function store(LoginRequest $request): RedirectResponse
     {
         try {
             $credentials = [
@@ -32,24 +36,29 @@ class LoginController extends Controller
             ];
 
             if (Auth::attempt($credentials)) {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.data-seed.index');
             }
 
-            // Optionally, you can redirect the user to a success page
-            return redirect()->route('admin.login');
         } catch (Exception $ex) {
             Log::error($ex->getMessage());
         }
+
+        return redirect()->route('admin.login');
     }
 
-    public function logout()
+    /**
+     * Logout the login user.
+     *
+     * @return RedirectResponse
+     */
+    public function logout(): RedirectResponse
     {
         try {
             Auth::logout();
-
-            return redirect()->route('admin.login');
         } catch (Exception $ex) {
             Log::error($ex->getMessage());
         }
+
+        return redirect()->route('admin.login');
     }
 }

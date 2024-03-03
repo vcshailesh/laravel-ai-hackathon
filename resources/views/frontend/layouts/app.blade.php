@@ -33,7 +33,11 @@
 <body class="bg-black bg-main bg-[length:100%] text-white font-raleway">
 
     <div class="container">
-        @yield('content')
+        <main class="p-4 w-[calc(100%-250px)]" style="width: 100%;">
+            <div class="p-3 rounded-lg bg-black-bg">
+                @yield('content')
+            </div>
+        </main>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="{{ asset('js/tailwindConfig.js') }}"></script>

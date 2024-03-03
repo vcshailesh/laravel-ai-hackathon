@@ -29,12 +29,6 @@
                             <img src="{{asset('images/web/user.svg')}}" alt="menu" width="30" height="30" />
                             <p class="text-white text-sm ms-3">{{ Auth()->user()->name }}</p>
                         </div>
-                        <a href="javascript:void(0);">
-                            <div class="flex items-center m-3">
-                                <img src="{{asset('images/web/setting.svg')}}" alt="setting" />
-                                <p class="text-white text-sm ms-3">Settings</p>
-                            </div>
-                        </a>
                         <form id="logout-form" action="{{ route('admin.logout') }}" method="POST">
                             @csrf
                             <button class="flex items-center m-3">

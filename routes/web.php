@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(LoginController::class)->as('admin.')->prefix('admin')->group(function () {
     Route::get('login', 'index')->name('login');
     Route::post('login', 'store')->name('store');
-    Route::get('logout', 'logout')->name('logout');
+    Route::post('logout', 'logout')->name('logout');
 });
 
 

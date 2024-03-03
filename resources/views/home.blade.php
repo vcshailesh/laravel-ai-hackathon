@@ -21,10 +21,10 @@
 @endpush
 
 @section('content')
-    <div class="mx-auto h-100 rounded" style="margin-top: 100px">
+    <div class="mx-auto h-100 rounded" style="margin-top: 60px;">
         <div class="chat-container overflow-y-scroll w-100 h-[calc(100vh-235px)]"></div>
         <div class="typing-container relative d-flex">
-            <div class="typing-content">
+            <div class="typing-content" style="margin-right: -130px">
                 <div class="typing-textarea form-group">
                     <textarea id="chat-input" spellcheck="false" placeholder="Enter a prompt here" required></textarea>
                     <span id="send-btn" class=" bg-gray-500 text-white hover:text-white material-symbols-rounded"><svg
@@ -46,6 +46,10 @@
         let chatboatName = "{{ config('app.name') }}";
         let chatbotUrl = "{{ route('chatbot') }}"
         let listenResponseUrl = "{{ route('listen') }}"
+
+        $('document').ready(function(){
+            localStorage.removeItem("all-chats");
+        });
     </script>
     <script src="{{ asset('js/chatboat.js') }}"></script>
 @endsection
