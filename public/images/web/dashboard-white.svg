@@ -1,0 +1,18 @@
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+	<title>My room - Room Details</title>
+	<style>
+		tspan { white-space:pre }
+		.shp0 { fill: #ffffff } 
+	</style>
+	<g id="My room - Room Details">
+		<g id="Group 605">
+			<g id="Group 12">
+				<g id="noun_dashboard_3844371">
+					<g id="Dashboard">
+						<path id="Path 4" fill-rule="evenodd" class="shp0" d="M10 21C10 22.66 8.66 24 7 24L3 24C1.34 24 0 22.66 0 21L0 3C0 1.34 1.34 0 3 0L7 0C8.66 0 10 1.34 10 3L10 21ZM21 15.7C22.66 15.7 24 17.04 24 18.7L24 21C24 22.66 22.66 24 21 24L15 24C13.34 24 12 22.66 12 21L12 18.7C12 17.04 13.34 15.7 15 15.7L21 15.7ZM21 0C22.66 0 24 1.34 24 3L24 10.7C24 12.36 22.66 13.7 21 13.7L15 13.7C13.34 13.7 12 12.36 12 10.7L12 3C12 1.34 13.34 0 15 0L21 0Z" />
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>
