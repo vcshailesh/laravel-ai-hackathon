@@ -26,7 +26,7 @@
         <div class="typing-container relative d-flex">
             <div class="typing-content" style="margin-right: -130px">
                 <div class="typing-textarea form-group">
-                    <textarea id="chat-input" spellcheck="false" placeholder="Enter a prompt here" required></textarea>
+                    <textarea id="chat-input" spellcheck="false" placeholder="Ask me query" required></textarea>
                     <span id="send-btn" class=" bg-gray-500 text-white hover:text-white material-symbols-rounded"><svg
                             xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
                             <path
