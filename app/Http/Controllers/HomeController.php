@@ -9,21 +9,25 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
     /**
      * Show the the chatboat
      *
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         return view('home');
     }
 
     /**
      * For generate response
-     * 
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function generateResponse(Request $request): JsonResponse
     {
@@ -33,24 +37,9 @@ class HomeController extends Controller
             $apiKey = env('GROQ_API_KEY');
 
             $client = new Client();
-            $response = $client->post($apiUrl, [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $apiKey,
-                ],
-                'json' => [
-                    'model' => 'mixtral-8x7b-32768',
-                    'messages' => [
-                        ['role' => 'system', 'content' => "You are a keyword extractor, you have access to the following user's question: <br>" . $userText],
-                        ['role' => 'user', 'content' => "Please provide the most important words from the user's question, without any explanations or additional context. These keywords should capture the essence of the user's question and help to focus the response. Please give these keywords in an array with out any other note."],
-                    ],
-                    'max_tokens' => 600,
-                    "temperature" => 0.5,
-                    "top_p" => 1,
-                ],
-            ]);
+            $response = $this->getQueryFormAI($client, $apiKey, $apiUrl);
 
-            $responseData = json_decode($response->getBody(), true);
+            $responseData = json_decode($response, true);
 
             $keywords = $responseData['choices'][0]['message']['content'];
 
@@ -72,23 +61,8 @@ class HomeController extends Controller
                         $paragraph .= $data->description;
                     }
 
-                    $dbResponse = $client->post($apiUrl, [
-                        'headers' => [
-                            'Content-Type' => 'application/json',
-                            'Authorization' => 'Bearer ' . $apiKey,
-                        ],
-                        'json' => [
-                            'model' => 'mixtral-8x7b-32768',
-                            'messages' => [
-                                ['role' => 'system', 'content' => "You are a helpful assistant, the paragraph you are working with is:" . $paragraph],
-                                ['role' => 'user', 'content' => "Formulate a answer for the following user's question: " . $userText],
-                            ],
-                            'max_tokens' => 32000,
-                            "temperature" => 0.7,
-                            "top_p" => 1,
-                        ],
-                    ]);
-                    $dbResponseData = json_decode($dbResponse->getBody(), true);
+                    $dbResponse = $this->getResultFormat($client, $apiKey, $apiUrl);
+                    $dbResponseData = json_decode($dbResponse, true);
 
                     $dbResult = $dbResponseData['choices'][0]['message']['content'];
 
@@ -144,5 +118,65 @@ class HomeController extends Controller
         }
 
         return response()->json($audioUrl);
+    }
+
+    /**
+     * Get query form ai
+     *
+     * @param Client $client
+     * @param string $apiUrl
+     * @param string $apiKey
+     * @return mixed
+     */
+    private function getQueryFormAI(Client $client, string $apiUrl, string $apiKey): mixed
+    {
+        $response = $client->post($apiUrl, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $apiKey,
+            ],
+            'json' => [
+                'model' => 'mixtral-8x7b-32768',
+                'messages' => [
+                    ['role' => 'system', 'content' => "You are a keyword extractor, you have access to the following user's question: <br>" . $userText],
+                    ['role' => 'user', 'content' => "Please provide the most important words from the user's question, without any explanations or additional context. These keywords should capture the essence of the user's question and help to focus the response. Please give these keywords in an array with out any other note."],
+                ],
+                'max_tokens' => 600,
+                "temperature" => 0.5,
+                "top_p" => 1,
+            ],
+        ]);
+
+        return $response->getBody();
+    }
+
+    /**
+     * Get result in format
+     *
+     * @param Client $client
+     * @param string $apiUrl
+     * @param string $apiKey
+     * @return mixed
+     */
+    private function getResultFormat(Client $client, string $apiKey, string $apiUrl): mixed
+    {
+        $dbResponse = $client->post($apiUrl, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $apiKey,
+            ],
+            'json' => [
+                'model' => 'mixtral-8x7b-32768',
+                'messages' => [
+                    ['role' => 'system', 'content' => "You are a helpful assistant, the paragraph you are working with is:" . $paragraph],
+                    ['role' => 'user', 'content' => "Formulate a answer for the following user's question: " . $userText],
+                ],
+                'max_tokens' => 32000,
+                "temperature" => 0.7,
+                "top_p" => 1,
+            ],
+        ]);
+
+        return $dbResponse->getBody();
     }
 }

@@ -89,6 +89,9 @@ class DataSeedController extends Controller
         return true;
     }
 
+    /**
+     * @return mixed
+     */
     private function pdfToTextConvert($file)
     {
         return (new Pdf())
