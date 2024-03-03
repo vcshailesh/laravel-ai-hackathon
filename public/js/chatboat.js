@@ -41,7 +41,7 @@ const getChatResponse = async (incomingChatDiv) => {
     };
     $.ajax({
         method: 'POST',
-        url: "/chat/response",
+        url: chatbotUrl,
         data: data,
         success: function (response) {
             console.log(response);

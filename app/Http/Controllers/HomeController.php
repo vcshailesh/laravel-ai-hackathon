@@ -2,6 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 class HomeController extends Controller
 {
     /**
@@ -11,5 +19,91 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+
+    /**
+     * For generate response
+     * 
+     */
+    public function generateResponse(Request $request): JsonResponse
+    {
+        try {
+            $userText = $request->userText;
+            $language = $request->language;
+            $apiUrl = env('GROQ_API_URL');
+            $apiKey = env('GROQ_API_KEY');
+
+            $client = new Client();
+            $response = $client->post($apiUrl, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $apiKey,
+                ],
+                'json' => [
+                    'model' => 'mixtral-8x7b-32768',
+                    'messages' => [
+                        ['role' => 'system', 'content' => "You are a keyword extractor, you have access to the following user's question: <br>" . $userText],
+                        ['role' => 'user', 'content' => "Please provide the most important words from the user's question, without any explanations or additional context. These keywords should capture the essence of the user's question and help to focus the response. Please give these keywords in an array with out any other note."],
+                    ],
+                    'max_tokens' => 600,
+                    "temperature" => 0.5,
+                    "top_p" => 1,
+                ],
+            ]);
+
+            $responseData = json_decode($response->getBody(), true);
+
+            $keywords = $responseData['choices'][0]['message']['content'];
+
+            $keywordsArray = [];
+            if (preg_match('/\[(.*?)\]/', $keywords, $matches)) {
+                $keywordsArray = json_decode($matches[0], true);
+            } else {
+                $response = "Please provide a more detailed question. Your current question is too short and may lack sufficient information for a proper response.";
+            }
+
+            if ($responseData) {
+                $whereClause = "description LIKE '%" . implode("%' OR description LIKE '%", $keywordsArray) . "%'";
+                $query = "SELECT description FROM datasets WHERE " . $whereClause;
+                $resultData = DB::select($query);
+
+                if ($resultData) {
+                    $paragraph = '';
+                    foreach ($resultData as $data) {
+                        $paragraph .= $data->description;
+                    }
+
+                    $dbResponse = $client->post($apiUrl, [
+                        'headers' => [
+                            'Content-Type' => 'application/json',
+                            'Authorization' => 'Bearer ' . $apiKey,
+                        ],
+                        'json' => [
+                            'model' => 'mixtral-8x7b-32768',
+                            'messages' => [
+                                ['role' => 'system', 'content' => "You are a helpful assistant, the paragraph you are working with is:" . $paragraph],
+                                ['role' => 'user', 'content' => "Formulate a answer for the following user's question: " . $userText],
+                            ],
+                            'max_tokens' => 32000,
+                            "temperature" => 0.7,
+                            "top_p" => 1,
+                        ],
+                    ]);
+                    $dbResponseData = json_decode($dbResponse->getBody(), true);
+
+                    $dbResult = $dbResponseData['choices'][0]['message']['content'];
+
+                    return response()->json($dbResult);
+                } else {
+                    $response = "Sorry, I couldn't find any relevant information for your query. Please try again with different search terms.";
+                }
+            }
+        } catch (\Exception $exception) {
+            Log::error($exception);
+
+            $response = "I'm sorry, but I'm currently experiencing some technical difficulties. I'll be back online shortly.";
+        }
+
+        return response()->json($response);
     }
 }

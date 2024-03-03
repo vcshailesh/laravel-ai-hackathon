@@ -39,5 +39,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'as' => 'admin.'], fu
 Route::controller(HomeController::class)
     ->group(function () {
         Route::get('/', 'index')->name('home');
+        Route::post('/chatbot', 'generateResponse')->name('chatbot');
 });
 

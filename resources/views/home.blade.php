@@ -43,6 +43,7 @@
         let userImage = '<img src="{{ asset('images/web/user.svg') }}" alt="user-img">';
         let botImage = '<img src="{{ asset('images/web/boat.svg') }}" alt="chatbot-img">';
         let chatboatName = "{{ config('app.name') }}";
+        let chatbotUrl = "{{ route('chatbot') }}"
     </script>
     <script src="{{ asset('js/chatboat.js') }}"></script>
 @endsection
