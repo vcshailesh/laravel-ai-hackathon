@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DataSeedController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,9 +21,18 @@ Route::controller(LoginController::class)->as('admin.')->prefix('admin')->group(
     Route::get('login', 'index')->name('login');
     Route::post('login', 'store')->name('store');
     Route::get('logout', 'logout')->name('logout');
+});
 
-    Route::group(['middleware' => 'auth'], function () {
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::controller(DataSeedController::class)
+        ->prefix('data-seed')
+        ->as('data-seed.')
+        ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('upload', 'storeUploadFile')->name('upload');
     });
 });
 
@@ -30,3 +40,4 @@ Route::controller(HomeController::class)
     ->group(function () {
         Route::get('/', 'index')->name('home');
 });
+

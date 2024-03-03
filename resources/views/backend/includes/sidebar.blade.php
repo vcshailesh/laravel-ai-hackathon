@@ -10,7 +10,7 @@
             </a>
         </li>
         <li class="side-list px-[25px] py-[15px] relative">
-            <a href="javascript:void(0);"
+            <a href="{{ route('admin.data-seed.index') }}"
                 class="flex items-center text-[15px] hover:text-white"
                 aria-haspopup="true" data-menu-toggle="hover">
                 <img src="{{ asset ('images/web/optimization.svg') }}" alt="optimization"
