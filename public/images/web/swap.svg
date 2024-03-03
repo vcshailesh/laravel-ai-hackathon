@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24.001" height="24" viewBox="0 0 24.001 24">
+  <g id="swap_horiz_black_24dp" transform="translate(-2)">
+    <path id="Path_94469" data-name="Path 94469" d="M0,0H24V24H0Z" transform="translate(2)" fill="none"/>
+    <path id="Path_94470" data-name="Path 94470" d="M7.209,14.109l-3.8,3.81a.7.7,0,0,0,0,.97l3.8,3.81a.679.679,0,0,0,1.161-.478V19.763h8.208a1.366,1.366,0,0,0,0-2.731H8.369V14.587A.676.676,0,0,0,7.209,14.109ZM27.025,9.725l-3.8-3.81a.679.679,0,0,0-1.161.478V8.837H13.846a1.366,1.366,0,0,0,0,2.731h8.208v2.445a.676.676,0,0,0,1.161.478l3.8-3.81a.672.672,0,0,0,.014-.956Z" transform="translate(-1.217 -2.711)" fill="#fff"/>
+  </g>
+</svg>
